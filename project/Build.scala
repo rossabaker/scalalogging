@@ -5,8 +5,6 @@ import sbtrelease.ReleasePlugin._
 
 object Build extends Build {
 
-  val ScalaVersion = "2.10.3"
-
   lazy val root = Project(
     "scalalogging",
     file("."),
@@ -26,7 +24,7 @@ object Build extends Build {
     file("scalalogging-slf4j"),
     settings = commonSettings ++ Seq(
       libraryDependencies := Seq(
-        Dependencies.Compile.scalaReflect,
+        Dependencies.Compile.scalaReflect % scalaVersion.value,
         Dependencies.Compile.slf4jApi
       ),
       initialCommands in console := "import com.typesafe.scalalogging.slf4j._"
@@ -47,7 +45,7 @@ object Build extends Build {
     file("scalalogging-log4j"),
     settings = commonSettings ++ Seq(
       libraryDependencies := Seq(
-        Dependencies.Compile.scalaReflect,
+        Dependencies.Compile.scalaReflect % scalaVersion.value,
         Dependencies.Compile.log4jApi
       ),
       initialCommands in console := "import com.typesafe.scalalogging.log4j._"
@@ -69,7 +67,8 @@ object Build extends Build {
     releaseSettings ++
     Seq(
       organization := "com.typesafe",
-      scalaVersion := ScalaVersion,
+      crossScalaVersions := Seq("2.10.3", "2.11.0"),
+      scalaVersion := "2.10.3",
       scalacOptions ++= Seq(
         "-unchecked",
         "-deprecation",
@@ -104,13 +103,13 @@ object Build extends Build {
   object Dependencies {
 
     object Compile {
-      val scalaReflect = "org.scala-lang" % "scala-reflect" % ScalaVersion
+      val scalaReflect = "org.scala-lang" % "scala-reflect"
       val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.5"
       val log4jApi = "org.apache.logging.log4j" % "log4j-api" % "2.0-beta4"
     }
 
     object Test {
-      val specs2 = "org.specs2" %% "specs2" % "1.14" % "test"
+      val specs2 = "org.specs2" %% "specs2" % "2.3.11" % "test"
       val mockito = "org.mockito" % "mockito-all" % "1.9.0" % "test"
       val hamcrest = "org.hamcrest" % "hamcrest-all" % "1.1" % "test"
     }
